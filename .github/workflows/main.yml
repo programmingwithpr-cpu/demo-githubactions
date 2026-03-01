@@ -1,8 +1,35 @@
 name: Build & Push
+
 on:
+  workflow_dispatch:
   push:
     branches:
       - test
+
 jobs:
   build-and-push:
-    runs-on: 
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: luispiquinrey/daw-web:latest
+
+      - name: Run container on port 8888
+        run: |
+          docker stop daw-web || true
+          docker rm daw-web || true
+          docker pull luispiquinrey/daw-web:latest
+          docker run -d -p 8888:80 --name daw-web luispiquinrey/daw-web:latest
