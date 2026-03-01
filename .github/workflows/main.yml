@@ -25,11 +25,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: luispiquinrey/daw-web:latest
+          tags: luispiquinreyfomento/daw-web:latest
 
       - name: Run container on port 8888
         run: |
           docker stop daw-web || true
           docker rm daw-web || true
-          docker pull luispiquinrey/daw-web:latest
-          docker run -d -p 8888:80 --name daw-web luispiquinrey/daw-web:latest
+          docker pull luispiquinreyfomento/daw-web:latest
+          docker run -d -p 8888:80 --name daw-web luispiquinreyfomento/daw-web:latest
